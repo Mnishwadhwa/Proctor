@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proctor.js - Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .form-group input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .video-container {
+      position: relative;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .video-container video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .video-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .status-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .status-item {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .status-item .label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .status-item .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .status-item.active .value {
+      color: #28a745;
+    }
+
+    .status-item.warning .value {
+      color: #ffc107;
+    }
+
+    .status-item.danger .value {
+      color: #dc3545;
+    }
+
+    .violations-list {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #eee;
+      border-radius: 8px;
+    }
+
+    .violation-item {
+      padding: 10px 15px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .violation-item:last-child {
+      border-bottom: none;
+    }
+
+    .violation-item .type {
+      font-weight: 600;
+      color: #dc3545;
+    }
+
+    .violation-item .time {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .plagiarism-section textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      resize: vertical;
+    }
+
+    .plagiarism-result {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .score-bar {
+      height: 20px;
+      background: #e9ecef;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #28a745 0%, #ffc107 50%, #dc3545 100%);
+      transition: width 0.3s;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .error-banner {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .success-banner {
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Proctor.js Demo</h1>
+    <p>Browser-based proctoring system for online exams</p>
+  </header>
+
+  <div class="container">
+    <!-- Configuration -->
+    <div class="card" id="configCard">
+      <h2>Configuration</h2>
+      <div class="config-grid">
+        <div class="form-group">
+          <label>API URL</label>
+          <input type="text" id="apiUrl" value="http://localhost:3000" placeholder="Backend API URL">
+        </div>
+        <div class="form-group">
+          <label>API Key</label>
+          <input type="text" id="apiKey" value="mRx9BgxQelKPydax" placeholder="Your API key">
+        </div>
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="text" id="userId" value="user-123" placeholder="User identifier">
+        </div>
+        <div class="form-group">
+          <label>Exam ID</label>
+          <input type="text" id="examId" value="exam-456" placeholder="Exam identifier">
+        </div>
+      </div>
+
+      <div class="config-grid">
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="webcamEnabled" checked>
+          <label>Webcam Monitoring</label>
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="screenEnabled" checked>
+          <label>Screen Monitoring</label>
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="tabEnabled" checked>
+          <label>Tab Switch Detection</label>
+        </div>
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="inputEnabled" checked>
+          <label>Input Tracking</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <h2>Controls</h2>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn btn-primary" id="startBtn" onclick="startProctoring()">
+          Start Proctoring
+        </button>
+        <button class="btn btn-danger" id="stopBtn" onclick="stopProctoring()" disabled>
+          Stop Proctoring
+        </button>
+        <button class="btn btn-secondary" id="requestPermsBtn" onclick="requestPermissions()">
+          Request Permissions
+        </button>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="card">
+      <h2>Status</h2>
+      <div class="status-panel">
+        <div class="status-item" id="sessionStatus">
+          <div class="label">Session</div>
+          <div class="value">Inactive</div>
+        </div>
+        <div class="status-item" id="webcamStatus">
+          <div class="label">Webcam</div>
+          <div class="value">Off</div>
+        </div>
+        <div class="status-item" id="screenStatus">
+          <div class="label">Screen</div>
+          <div class="value">Off</div>
+        </div>
+        <div class="status-item" id="violationStatus">
+          <div class="label">Violations</div>
+          <div class="value">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Previews -->
+    <div class="card" id="videoCard">
+      <h2>Video Previews</h2>
+      <div class="video-grid">
+        <div class="video-container" id="webcamContainer">
+          <video id="webcamPreview" autoplay playsinline muted></video>
+          <div class="video-label">Webcam</div>
+        </div>
+        <div class="video-container" id="screenContainer">
+          <video id="screenPreview" autoplay playsinline muted></video>
+          <div class="video-label">Screen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Violations -->
+    <div class="card">
+      <h2>Violations Log</h2>
+      <div class="violations-list" id="violationsList">
+        <div class="empty-state">No violations recorded</div>
+      </div>
+    </div>
+
+    <!-- Plagiarism Checker -->
+    <div class="card">
+      <h2>Plagiarism Checker</h2>
+      <div class="plagiarism-section">
+        <textarea id="plagiarismText" placeholder="Enter text to check for plagiarism..."></textarea>
+        <div style="margin-top: 10px;">
+          <button class="btn btn-primary" onclick="checkPlagiarism()">Check for Plagiarism</button>
+        </div>
+        <div class="plagiarism-result hidden" id="plagiarismResult">
+          <strong>Similarity Score:</strong>
+          <div class="score-bar">
+            <div class="score-fill" id="scoreFill" style="width: 0%"></div>
+          </div>
+          <span id="similarityScore">0%</span>
+          <p id="plagiarismMessage" style="margin-top: 10px;"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Use built distribution file -->
+  <script src="../frontend/dist/proctor.umd.js"></script>
+  <script>
+
+    let proctor = null;
+    let violations = [];
+
+    // Make functions globally available
+    window.startProctoring = startProctoring;
+    window.stopProctoring = stopProctoring;
+    window.requestPermissions = requestPermissions;
+    window.checkPlagiarism = checkPlagiarism;
+
+    async function startProctoring() {
+      try {
+        const config = getConfig();
+
+        proctor = new Proctor({
+          apiUrl: config.apiUrl,
+          apiKey: config.apiKey,
+          userId: config.userId,
+          examId: config.examId,
+          features: {
+            webcam: { enabled: config.webcamEnabled, interval: 30000 },
+            screenMonitor: { enabled: config.screenEnabled, interval: 60000 },
+            tabSwitch: { enabled: config.tabEnabled, maxWarnings: 3 },
+            inputTracking: { enabled: config.inputEnabled }
+          },
+          onViolation: (type, data) => {
+            addViolation(type, data);
+          },
+          onError: (error) => {
+            console.error('Proctor error:', error);
+            alert('Error: ' + error.message);
+          },
+          onStart: (data) => {
+            console.log('Session started:', data.sessionId);
+            updateSessionStatus(data.sessionId);
+          }
+        });
+
+        await proctor.start();
+
+        // Setup video previews
+        if (config.webcamEnabled) {
+          const webcamVideo = proctor.getWebcamPreview();
+          if (webcamVideo) {
+            document.getElementById('webcamPreview').srcObject = webcamVideo.srcObject;
+          }
+        }
+
+        if (config.screenEnabled) {
+          const screenVideo = proctor.getScreenPreview();
+          if (screenVideo) {
+            document.getElementById('screenPreview').srcObject = screenVideo.srcObject;
+          }
+        }
+
+        // Update UI
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = false;
+        document.getElementById('configCard').style.opacity = '0.6';
+        document.getElementById('configCard').style.pointerEvents = 'none';
+
+      } catch (error) {
+        console.error('Failed to start:', error);
+        alert('Failed to start proctoring: ' + error.message);
+      }
+    }
+
+    async function stopProctoring() {
+      if (!proctor) return;
+
+      try {
+        const stats = await proctor.stop();
+        console.log('Session stats:', stats);
+
+        // Update UI
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('stopBtn').disabled = true;
+        document.getElementById('configCard').style.opacity = '1';
+        document.getElementById('configCard').style.pointerEvents = 'auto';
+
+        // Clear video previews
+        document.getElementById('webcamPreview').srcObject = null;
+        document.getElementById('screenPreview').srcObject = null;
+
+        updateSessionStatus(null);
+
+      } catch (error) {
+        console.error('Failed to stop:', error);
+        alert('Failed to stop proctoring: ' + error.message);
+      }
+    }
+
+    async function requestPermissions() {
+      try {
+        const results = await Proctor.requestPermissions();
+        const messages = [];
+
+        if (results.camera) {
+          messages.push('Camera: Granted');
+        } else {
+          messages.push('Camera: Denied');
+        }
+
+        if (results.screen) {
+          messages.push('Screen: Granted');
+        } else {
+          messages.push('Screen: Denied');
+        }
+
+        alert('Permissions:\n' + messages.join('\n'));
+      } catch (error) {
+        console.error('Permission request failed:', error);
+        alert('Failed to request permissions: ' + error.message);
+      }
+    }
+
+    async function checkPlagiarism() {
+      const text = document.getElementById('plagiarismText').value.trim();
+      if (!text) {
+        alert('Please enter some text to check');
+        return;
+      }
+
+      try {
+        // Use exposed TextSimilarity from UMD build
+        const TextSimilarity = window.ProctorUtils.TextSimilarity;
+
+        // For demo, compare with some sample text
+        const sampleTexts = [
+          "This is a sample text for comparison. It demonstrates how the plagiarism checker works.",
+          "The quick brown fox jumps over the lazy dog. This is another sample for testing.",
+        ];
+
+        let maxSimilarity = 0;
+        for (const sample of sampleTexts) {
+          const result = TextSimilarity.calculateSimilarity(text, sample);
+          if (result.overall > maxSimilarity) {
+            maxSimilarity = result.overall;
+          }
+        }
+
+        // Show result
+        const resultDiv = document.getElementById('plagiarismResult');
+        const scoreFill = document.getElementById('scoreFill');
+        const scoreText = document.getElementById('similarityScore');
+        const message = document.getElementById('plagiarismMessage');
+
+        resultDiv.classList.remove('hidden');
+        scoreFill.style.width = (maxSimilarity * 100) + '%';
+        scoreText.textContent = Math.round(maxSimilarity * 100) + '%';
+
+        if (maxSimilarity > 0.7) {
+          message.textContent = 'High similarity detected! This text may be plagiarized.';
+          message.style.color = '#dc3545';
+        } else if (maxSimilarity > 0.4) {
+          message.textContent = 'Moderate similarity detected. Please review.';
+          message.style.color = '#ffc107';
+        } else {
+          message.textContent = 'Low similarity. Text appears to be original.';
+          message.style.color = '#28a745';
+        }
+
+      } catch (error) {
+        console.error('Plagiarism check failed:', error);
+        alert('Failed to check plagiarism: ' + error.message);
+      }
+    }
+
+    function getConfig() {
+      return {
+        apiUrl: document.getElementById('apiUrl').value,
+        apiKey: document.getElementById('apiKey').value,
+        userId: document.getElementById('userId').value,
+        examId: document.getElementById('examId').value,
+        webcamEnabled: document.getElementById('webcamEnabled').checked,
+        screenEnabled: document.getElementById('screenEnabled').checked,
+        tabEnabled: document.getElementById('tabEnabled').checked,
+        inputEnabled: document.getElementById('inputEnabled').checked
+      };
+    }
+
+    function updateSessionStatus(sessionId) {
+      const el = document.getElementById('sessionStatus');
+      const valueEl = el.querySelector('.value');
+
+      if (sessionId) {
+        valueEl.textContent = 'Active';
+        el.classList.add('active');
+      } else {
+        valueEl.textContent = 'Inactive';
+        el.classList.remove('active');
+      }
+    }
+
+    function addViolation(type, data) {
+      violations.push({ type, data, timestamp: new Date().toISOString() });
+      updateViolationsList();
+    }
+
+    function updateViolationsList() {
+      const list = document.getElementById('violationsList');
+      const count = document.getElementById('violationStatus').querySelector('.value');
+
+      count.textContent = violations.length;
+
+      if (violations.length === 0) {
+        list.innerHTML = '<div class="empty-state">No violations recorded</div>';
+        return;
+      }
+
+      list.innerHTML = violations.map((v, i) => `
+        <div class="violation-item">
+          <span class="type">${v.type}</span>
+          <span class="time">${new Date(v.timestamp).toLocaleTimeString()}</span>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
